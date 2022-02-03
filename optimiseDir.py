@@ -14,17 +14,17 @@ def main():
 
     with open('optimiseResults.csv', 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['Folder path', 'Name', 'Date created', 'Size', 'Date last accessed', 'Accessed in the last month?'])
+        writer.writerow(['Folder path', 'Name', 'File Type', 'Date created', 'Size (B)', 'Date last accessed', 'Accessed in the last month?'])
 
         for path in paths:
 
             newDocDirectory = "Docs"
-            # Docs -> docx, doc, xlxs
+            # Docs -> docx, doc, xlsx
             # Pdfs -> pdf
             # Images -> png, jpg, jpeg
             # Videos -> mp4
             # Audio -> mp3, wav
-            newDirectories = ["Docs", "Pdfs", "Images", "Videos", "Audio"]
+            newDirectories = ["Docs", "Pdfs", "Images", "Videos", "Audio", "Misc"]
             for dir in newDirectories:
                 newDirPath = os.path.join(path, dir)
 
@@ -42,12 +42,15 @@ def main():
                         # lastModified = datetime.fromtimestamp(info.st_mtime)
                         lastAccessed = datetime.fromtimestamp(info.st_atime)
 
+                        filePath = os.path.join(path, name)
+                        fileName, fileExtension = os.path.splitext(filePath)
+
                         if (datetime.now() - lastAccessed < timedelta(days = 30)):
                             flag = 'Yes'
                         else:
                             flag = 'No'
 
-                        writer.writerow([path, name, dateCreated, size, lastAccessed, flag])
+                        writer.writerow([path, name, fileExtension, dateCreated, size, lastAccessed, flag])
 
 if __name__ == "__main__":
     main()
